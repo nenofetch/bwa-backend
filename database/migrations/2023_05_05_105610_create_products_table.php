@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->float('price');
             $table->longText('description');
-            $table->string('tags');
-            $table->bigInteger('categories_id')->nullable();
+            $table->string('tags')->nullable();
+            $table->bigInteger('categories_id');
             $table->softDeletes();
             $table->timestamps();
         });
