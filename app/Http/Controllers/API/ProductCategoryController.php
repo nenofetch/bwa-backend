@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\Helpers\ResponseFormatter;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 
-class APIProductCategoryController extends Controller
+class ProductCategoryController extends Controller
 {
     public function all(Request $request)
     {
