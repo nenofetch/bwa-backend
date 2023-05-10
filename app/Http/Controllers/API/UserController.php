@@ -20,6 +20,7 @@ class UserController extends Controller
                 'name' => ['required', 'string', 'max:255'],
                 'username' => ['required', 'string', 'max:255', 'unique:users'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'phone' => ['required', 'string', 'max:13', 'unique:users'],
                 'password' => ['required', 'string', new Password]
             ]);
 
@@ -27,6 +28,7 @@ class UserController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'username' => $request->username,
+                'phone' => $request->phone,
                 'password' => Hash::make($request->password),
             ]);
 
@@ -66,17 +68,17 @@ class UserController extends Controller
 
             $user = User::where('email', $request->email)->first();
             if (!Hash::check($request->password, $user->password)) {
-                throw new \Exception('Invalid Credentials');
+                throw new Exception('Invalid Credentials');
             }
 
             $tokenResult = $user->createToken('authToken')->plainTextToken;
 
             return ResponseFormatter::success([
                 'access_token' => $tokenResult,
-                'token_type'=> 'Bearer',
+                'token_type' => 'Bearer',
                 'user' => $user
             ],
-            'Authenticated');
+                'Authenticated');
         } catch (Exception $error) {
             return ResponseFormatter::error([
                 'message' => 'Something went wrong',
@@ -92,5 +94,28 @@ class UserController extends Controller
         return ResponseFormatter::success($request->user(), 'Data Profile User berhasil diambil');
     }
 
+    public function updateProfile(Request $request)
+    {
+        try {
+            $request->validate([
+                'name' => ['nullable', 'string', 'max:255'],
+                'username' => ['nullable', 'string', 'max:255', 'unique:users'],
+                'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users'],
+                'phone' => ['nullable', 'string', 'max:13', 'unique:users'],
+            ]);
 
+            $data = $request->all();
+            $user = Auth::user();
+            $user->update($data);
+            return ResponseFormatter::success($user, 'Profile Updated');
+        } catch (Exception $error) {
+            return ResponseFormatter::error([
+                'message' => 'Something went wrong',
+                'error' => $error
+            ],
+                'Authentication Failed', 500
+            );
+        }
+
+    }
 }
