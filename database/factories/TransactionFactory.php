@@ -21,7 +21,7 @@ class TransactionFactory extends Factory
             'payment' => 'MANUAL',
             'total_price' => (rand(1000, 2000)),
             'shipping_price' => (rand(18000, 20000)),
-            'status' => 'Shipped',
+            'status' => 'PENDING',
         ];
     }
 }
