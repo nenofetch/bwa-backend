@@ -18,29 +18,28 @@ class TransactionController extends Controller
 
         if ($id) {
             $transaction = Transaction::with(['items.product'])->find($id);
-            if ($transaction) {
+
+            if ($transaction)
                 return ResponseFormatter::success(
                     $transaction,
                     'Data transaksi berhasil diambil'
                 );
-            }
-        } else {
-            return ResponseFormatter::error(
-                null,
-                'Data transaksi tidak ditemukan',
-                404
-            );
+            else
+                return ResponseFormatter::error(
+                    null,
+                    'Data transaksi tidak ada',
+                    404
+                );
         }
 
         $transaction = Transaction::with(['items.product'])->where('users_id', Auth::user()->id);
 
-        if ($status) {
+        if ($status)
             $transaction->where('status', $status);
-        }
 
         return ResponseFormatter::success(
             $transaction->paginate($limit),
-            'Data List Transaksi berhasil Diambil'
+            'Data list transaksi berhasil diambil'
         );
     }
 }
